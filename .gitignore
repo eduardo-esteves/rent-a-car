@@ -16,6 +16,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/pg_data
 /php-config
 Dockerfile
 docker-compose.yaml
