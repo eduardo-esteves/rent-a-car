@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
+            $table->string('brand', 30)->unique();
+            $table->string('img', 100)->comment('Logo of the brand');
             $table->timestamps();
         });
     }

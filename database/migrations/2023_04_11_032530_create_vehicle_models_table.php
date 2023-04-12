@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('vehicle_models', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('brand_id')->constrained();
+            $table->string('model', 30);
+            $table->string('img', 100);
+            $table->integer('num_ports');
+            $table->integer('lugares');
+            $table->boolean('air_bag');
+            $table->boolean('abs');
             $table->timestamps();
         });
     }
