@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('car_rentals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id');
+            $table->foreignId('car_id');
+            $table->dateTime('start_date');
+            $table->dateTime('expected_return_date');
+            $table->dateTime('actual_return_date');
+            $table->float('daily_rate', 8,2);
+            $table->integer('init_mileage');
+            $table->integer('final_mileage');
             $table->timestamps();
         });
     }
