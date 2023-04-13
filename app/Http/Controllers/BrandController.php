@@ -28,7 +28,8 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $brand = Brand::create($request->all());
+        return $brand;
     }
 
     /**
