@@ -13,49 +13,61 @@ class BrandController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        return $this->brand->all();
+        return response()->json($this->brand->all());
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $brand = $this->brand->create($request->all());
-        return $brand;
+        return response()->json($brand, 201);
     }
 
     /**
      * Display the specified resource.
-     * $id integer
+     *
+     * @param int $id the ID of the brand to be showed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id)
     {
-        return $this->brand->find($id);
+        return response()->json($this->brand->find($id));
     }
 
     /**
      * Update the specified resource in storage.
-     * integer $id
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id  the ID of the brand to be updated
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $brand = $this->brand->find($id);
         $brand->update($request->all());
-        return $brand;
+        return response()->json($brand);
     }
 
     /**
      * Remove the specified resource from storage.
-     * $id integer
+     *
+     * @param int $id the ID of the brand to be deleted
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $brand = $this->brand->find($id);
         $brand->delete();
-        return ['cod' => 204, 'msg' => 'Registro deletado com sucesso!'];
+        return response()->json(['cod' => 204, 'msg' => 'Registro deletado com sucesso!'], 204);
     }
 }
