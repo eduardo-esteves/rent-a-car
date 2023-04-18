@@ -41,6 +41,12 @@ class BrandController extends Controller
      */
     public function show(int $id)
     {
+        $brand = $this->brand->find($id);
+
+        if(!$brand) {
+            return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
+        }
+
         return response()->json($this->brand->find($id));
     }
 
@@ -54,6 +60,11 @@ class BrandController extends Controller
     public function update(Request $request, int $id)
     {
         $brand = $this->brand->find($id);
+
+        if(!$brand) {
+            return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
+        }
+
         $brand->update($request->all());
         return response()->json($brand);
     }
@@ -67,6 +78,11 @@ class BrandController extends Controller
     public function destroy(int $id)
     {
         $brand = $this->brand->find($id);
+
+        if(!$brand) {
+            return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
+        }
+
         $brand->delete();
         return response()->json(['cod' => 204, 'msg' => 'Registro deletado com sucesso!'], 204);
     }
