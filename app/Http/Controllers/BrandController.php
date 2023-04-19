@@ -31,7 +31,7 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'brand' => 'required|string|max:255',
+            'brand' => 'required|string|unique:brands|max:255',
             'img'   => 'required|string|max:255',
         ]);
 
@@ -70,7 +70,7 @@ class BrandController extends Controller
     public function update(Request $request, int $id)
     {
         $validator = Validator::make($request->all(), [
-            'brand' => 'required|string|max:255',
+            'brand' => 'required|string|unique:brands|max:255',
             'img'   => 'required|string|max:255',
         ]);
 
