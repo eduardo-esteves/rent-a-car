@@ -30,10 +30,7 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'brand' => 'required|string|unique:brands|max:255',
-            'img'   => 'required|string|max:255',
-        ]);
+        $validator = $this->brand->validationFields($request->all());
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -69,12 +66,9 @@ class BrandController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $validator = Validator::make($request->all(), [
-            'brand' => 'required|string|unique:brands|max:255',
-            'img'   => 'required|string|max:255',
-        ]);
+        $validator = $this->brand->validationFields($request->all());
 
-        if ($validator->fails()) {
+        if($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
