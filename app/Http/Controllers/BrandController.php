@@ -30,7 +30,7 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->brand->validationFields($request->all());
+        $validator = $this->brand->validationFields($request);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -66,7 +66,7 @@ class BrandController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $validator = $this->brand->validationFields($request->all());
+        $validator = $this->brand->validationFields($request);
 
         if($validator->fails()) {
             return response()->json($validator->errors(), 422);
