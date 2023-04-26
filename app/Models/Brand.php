@@ -20,12 +20,7 @@ class Brand extends Model
         if ($method === 'PATCH') {
             $brand = [
                 'brand' => "string|max:255",
-                'img'   => 'string|max:255',
-            ];
-        } else if ($method === 'PUT') {
-            $brand = [
-                'brand' => "required|string|unique:brands,brand,0|max:255",
-                'img'   => 'required|string|max:255',
+                'img' => 'string|max:255',
             ];
         } else {
             $brand = [
