@@ -36,7 +36,14 @@ class BrandController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $brand = $this->brand->create($request->all());
+        $img = $request->file('img');
+        $img_urn = $img->store('imgs', 'public');
+
+        $brand = $this->brand->create([
+            'brand' => $request->input('brand'),
+            'img'   => $img_urn
+        ]);
+
         return response()->json($brand, 201);
     }
 
