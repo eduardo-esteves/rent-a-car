@@ -81,11 +81,17 @@ class BrandController extends Controller
 
         $brand = $this->brand->find($id);
 
+        $img = $request->file('img');
+        $img_urn = $img->store('imgs', 'public');
+
         if(!$brand) {
             return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
         }
 
-        $brand->update($request->all());
+        $brand->update([
+            'brand' => $request->input('brand'),
+            'img'   => $img_urn
+        ]);
         return response()->json($brand);
     }
 
