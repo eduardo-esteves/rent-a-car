@@ -25,7 +25,7 @@ class VehicleModelController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->vehicle->validationFields($request->all());
+        $validator = $this->vehicle->validationFields($request);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -66,7 +66,7 @@ class VehicleModelController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $validator = $this->vehicle->validationFields($request->all());
+        $validator = $this->vehicle->validationFields($request);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -81,19 +81,17 @@ class VehicleModelController extends Controller
         if ($request->file('img')) {
             // delete the old img before update
             Storage::disk('public')->delete($vehicle->img);
+            $img = $request->file('img');
+            $img_urn = $img->store('imgs/models', 'public');
         }
 
-        $img = $request->file('img');
-        $img_urn = $img->store('imgs/models', 'public');
+        foreach ($validator->getData() as $field => $value) {
+            if (array_key_exists($field, $request->all())) {
+                $final_request[$field] = ($field !== 'img') ? $request[$field] : $img_urn;
+            }
+        }
 
-        $vehicle->update([
-            'brand_id'  => $request->input('brand_id'),
-            'model'     => $request->input('model'),
-            'img'       => $img_urn,
-            'num_ports' => $request->input('num_ports'),
-            'air_bag'   => $request->input('air_bag'),
-            'abs'       => $request->input('abs'),
-        ]);
+        $vehicle->update($final_request);
 
         return response()->json($vehicle);
     }
