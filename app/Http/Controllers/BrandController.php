@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
@@ -81,17 +82,23 @@ class BrandController extends Controller
 
         $brand = $this->brand->find($id);
 
-        $img = $request->file('img');
-        $img_urn = $img->store('imgs', 'public');
-
         if(!$brand) {
             return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
         }
+
+        if($request->file('img')) {
+            // delete the old img before update
+            Storage::disk('public')->delete($brand->img);
+        }
+
+        $img = $request->file('img');
+        $img_urn = $img->store('imgs', 'public');
 
         $brand->update([
             'brand' => $request->input('brand'),
             'img'   => $img_urn
         ]);
+
         return response()->json($brand);
     }
 
@@ -108,6 +115,9 @@ class BrandController extends Controller
         if(!$brand) {
             return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
         }
+
+        // delete the old img before update
+        Storage::disk('public')->delete($brand->img);
 
         $brand->delete();
         return response()->json(['cod' => 204, 'msg' => 'Registro deletado com sucesso!'], 204);
