@@ -62,7 +62,7 @@ class BrandController extends Controller
             return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);
         }
 
-        return response()->json($this->brand->find($id));
+        return response()->json($brand);
     }
 
     /**
