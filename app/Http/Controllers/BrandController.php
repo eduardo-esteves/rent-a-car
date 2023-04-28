@@ -98,7 +98,6 @@ class BrandController extends Controller
             'brand' => $request->input('brand'),
             'img'   => $img_urn
         ]);
-
         return response()->json($brand);
     }
 
