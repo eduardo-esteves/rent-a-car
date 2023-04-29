@@ -15,23 +15,24 @@ class Brand extends Model
     public function validationFields(Request $request)
     {
         $fields = $request->all();
-        $method = $request->method();
+        $requestMethod = $request->method();
+        $final_rules = null;
 
-        if ($method === 'PATCH') {
-            $brand = [
-                'brand' => "string|max:255",
-                'img' => 'file|mimes:png,jpg,jpeg',
-            ];
-        } else {
-            $brand = [
-                'brand' => "required|string|unique:brands",
-                'img'   => 'required|file|mimes:png,jpg,jpeg|max:2048',
-            ];
+        $rules = [
+            'brand' => ($requestMethod !== 'POST') ? 'required|string|max:255' : 'required|string|unique:brands',
+            'img'   => 'required|file|mimes:png,jpg,jpeg|max:2048',
+        ];
+
+        if ($requestMethod === 'PATCH') {
+            foreach( $fields as $field => $value) {
+                if (array_key_exists($field, $rules)) {
+                    $final_rules[$field] = $rules[$field];
+                }
+            }
         }
 
+        $final_rules = $final_rules ?? $rules;
 
-        $validator = Validator::make($fields, $brand);
-
-        return $validator;
+        return Validator::make($fields, $final_rules);
     }
 }
