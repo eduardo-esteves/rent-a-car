@@ -41,4 +41,10 @@ class VehicleModel extends Model
 
         return  Validator::make($fields, $final_rules);
     }
+
+    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        // A vehicle model belongs to and only a brand
+        return $this->belongsTo(Brand::class);
+    }
 }

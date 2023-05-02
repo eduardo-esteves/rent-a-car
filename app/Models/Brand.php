@@ -20,11 +20,11 @@ class Brand extends Model
 
         $rules = [
             'brand' => ($requestMethod !== 'POST') ? 'required|string|max:255' : 'required|string|unique:brands',
-            'img'   => 'required|file|mimes:png,jpg,jpeg|max:2048',
+            'img' => 'required|file|mimes:png,jpg,jpeg|max:2048',
         ];
 
         if ($requestMethod === 'PATCH') {
-            foreach( $fields as $field => $value) {
+            foreach ($fields as $field => $value) {
                 if (array_key_exists($field, $rules)) {
                     $final_rules[$field] = $rules[$field];
                 }
@@ -34,5 +34,11 @@ class Brand extends Model
         $final_rules = $final_rules ?? $rules;
 
         return Validator::make($fields, $final_rules);
+    }
+
+    public function vehicleModels(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        // a brand has many vehicle models
+        return $this->hasMany(VehicleModel::class);
     }
 }
