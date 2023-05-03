@@ -20,7 +20,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        return response()->json($this->brand->all());
+        return response()->json($this->brand->with('vehicleModels')->get());
     }
 
     /**
@@ -56,7 +56,7 @@ class BrandController extends Controller
      */
     public function show(int $id)
     {
-        $brand = $this->brand->find($id);
+        $brand = $this->brand->with('vehicleModels')->find($id);
 
         if(!$brand) {
             return response()->json(['cod' => 404, 'msg' => 'Marca não encontrada'], 404);

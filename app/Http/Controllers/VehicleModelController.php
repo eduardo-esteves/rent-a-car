@@ -17,7 +17,7 @@ class VehicleModelController extends Controller
      */
     public function index()
     {
-        return response()->json($this->vehicle->all());
+        return response()->json($this->vehicle->with('brand')->get());
     }
 
     /**
@@ -52,7 +52,7 @@ class VehicleModelController extends Controller
      */
     public function show(int $id)
     {
-        $vehicle = $this->vehicle->find($id);
+        $vehicle = $this->vehicle->with('brand')->find($id);
 
         if(!$vehicle) {
             return response()->json(['cod' => 404, 'msg' => 'Veiculo não encontrada'], 404);
