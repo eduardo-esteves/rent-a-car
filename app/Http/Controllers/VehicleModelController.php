@@ -15,9 +15,16 @@ class VehicleModelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->vehicle->with('brand')->get());
+        if ($request->has('atributes')) {
+            $atributes = $request->input('atributes');
+            $vehicles = $this->vehicle->selectRaw($atributes)->with('brand')->get();
+        } else {
+            $vehicles = $this->vehicle->with('brand')->get();
+        }
+
+        return response()->json($vehicles);
     }
 
     /**
