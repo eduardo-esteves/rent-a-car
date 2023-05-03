@@ -17,12 +17,15 @@ class VehicleModelController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('atributes')) {
-            $atributes = $request->input('atributes');
-            $vehicles = $this->vehicle->selectRaw($atributes)->with('brand')->get();
-        } else {
-            $vehicles = $this->vehicle->with('brand')->get();
-        }
+        $vehicles_atributes = $request->has('vehicle_atributes')
+            ? $request->input('vehicle_atributes') . ',brand_id'
+            : '*';
+
+        $brand_atributes = $request->has('brand_atributes')
+            ? 'brand:id,' . $request->input('brand_atributes')
+            : 'brand';
+
+        $vehicles = $this->vehicle->selectRaw($vehicles_atributes)->with($brand_atributes)->get();
 
         return response()->json($vehicles);
     }
