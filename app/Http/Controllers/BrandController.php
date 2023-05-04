@@ -18,9 +18,28 @@ class BrandController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->brand->with('vehicleModels')->get());
+        $brands_attribute = $request->has('brands_attributes')
+            ? $request->input('brands_attributes') . ',id'
+            : '*';
+
+        $brands = $this->brand->selectRaw($brands_attribute);
+
+        $vehicles_attributes = $request->has('vehicles_attributes')
+            ? 'vehicleModels:brand_id,' . $request->input('vehicles_attributes')
+            : 'vehicleModels';
+
+        $brands->with($vehicles_attributes);
+
+        if ($request->has('filter')) {
+            $conditions = explode(':', $request->input('filter'));
+            $brands->where($conditions[0], $conditions[1], $conditions[2]);
+        }
+
+        $result = $brands->get();
+
+        return response()->json($result);
     }
 
     /**
