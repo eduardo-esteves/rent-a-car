@@ -21,13 +21,22 @@ class VehicleModelController extends Controller
             ? $request->input('vehicle_atributes') . ',brand_id'
             : '*';
 
+        $vehicles = $this->vehicle->selectRaw($vehicles_atributes);
+
         $brand_atributes = $request->has('brand_atributes')
             ? 'brand:id,' . $request->input('brand_atributes')
             : 'brand';
 
-        $vehicles = $this->vehicle->selectRaw($vehicles_atributes)->with($brand_atributes)->get();
+        $vehicles->with($brand_atributes);
 
-        return response()->json($vehicles);
+        if ($request->has('filter')) {
+            $conditions = explode(':', $request->input('filter'));
+            $vehicles->where($conditions[0], $conditions[1], $conditions[2]);
+        }
+
+        $result = $vehicles->get();
+
+        return response()->json($result);
     }
 
     /**
