@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\BrandRepository;
 
 class BrandController extends Controller
 {
@@ -20,24 +20,26 @@ class BrandController extends Controller
      */
     public function index(Request $request)
     {
-        $brands_attribute = $request->has('brands_attributes')
+        $brand_repository = new BrandRepository($this->brand);
+
+        $brands_attributes = $request->has('brands_attributes')
             ? $request->input('brands_attributes') . ',id'
             : '*';
-
-        $brands = $this->brand->selectRaw($brands_attribute);
 
         $vehicles_attributes = $request->has('vehicles_attributes')
             ? 'vehicleModels:brand_id,' . $request->input('vehicles_attributes')
             : 'vehicleModels';
 
-        $brands->with($vehicles_attributes);
+        $brand_repository->selectBrandAttributesWithVehicles([
+            'brands_attributes'     => $brands_attributes,
+            'vehicles_attributes'   => $vehicles_attributes,
+        ]);
 
         if ($request->has('filter')) {
-            $conditions = explode(':', $request->input('filter'));
-            $brands->where($conditions[0], $conditions[1], $conditions[2]);
+            $brand_repository->filters($request);
         }
 
-        $result = $brands->get();
+        $result = $brand_repository->getResult();
 
         return response()->json($result);
     }
