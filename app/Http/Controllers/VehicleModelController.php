@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\VehicleModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\VehicleModelRepository;
 
 class VehicleModelController extends Controller
 {
@@ -17,24 +18,26 @@ class VehicleModelController extends Controller
      */
     public function index(Request $request)
     {
-        $vehicles_atributes = $request->has('vehicle_atributes')
-            ? $request->input('vehicle_atributes') . ',brand_id'
+        $vehicle_model_repository = new VehicleModelRepository($this->vehicle);
+
+        $vehicles_attributes = $request->has('vehicle_attributes')
+            ? $request->input('vehicle_attributes') . ',brand_id'
             : '*';
 
-        $vehicles = $this->vehicle->selectRaw($vehicles_atributes);
-
-        $brand_atributes = $request->has('brand_atributes')
-            ? 'brand:id,' . $request->input('brand_atributes')
+        $brands_attributes = $request->has('brand_attributes')
+            ? 'brand:id,' . $request->input('brand_attributes')
             : 'brand';
 
-        $vehicles->with($brand_atributes);
+        $vehicle_model_repository->selectBrandAttributesWithVehicles([
+            'brands_attributes'     => $brands_attributes,
+            'vehicles_attributes'   => $vehicles_attributes,
+        ]);
 
         if ($request->has('filter')) {
-            $conditions = explode(':', $request->input('filter'));
-            $vehicles->where($conditions[0], $conditions[1], $conditions[2]);
+            $vehicle_model_repository->filters($request);
         }
 
-        $result = $vehicles->get();
+        $result = $vehicle_model_repository->getResult();
 
         return response()->json($result);
     }
