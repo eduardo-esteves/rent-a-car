@@ -28,7 +28,7 @@ class VehicleModelController extends Controller
             ? 'brand:id,' . $request->input('brand_attributes')
             : 'brand';
 
-        $vehicle_model_repository->selectBrandAttributesWithVehicles([
+        $vehicle_model_repository->selectVehicleAttributesWithBrands([
             'brands_attributes'     => $brands_attributes,
             'vehicles_attributes'   => $vehicles_attributes,
         ]);
