@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
+    public function __construct(Car $car)
+    {
+        $this->car = $car;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -16,33 +20,28 @@ class CarController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $validator = $this->car->validationFields($request);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $car = $this->car->create($request->all());
+
+        return response()->json($car, 201);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Car $car)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Car $car)
     {
         //
     }
