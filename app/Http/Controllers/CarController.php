@@ -16,7 +16,9 @@ class CarController extends Controller
      */
     public function index()
     {
-        //
+        $cars = $this->car->with('vehicleModel')->get();
+
+        return response()->json($cars);
     }
 
     /**
