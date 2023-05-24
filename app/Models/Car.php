@@ -37,4 +37,9 @@ class Car extends Model
 
         return Validator::make($fields, $final_rules);
     }
+
+    public function vehicleModel(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(VehicleModel::class);
+    }
 }

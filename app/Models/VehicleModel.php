@@ -47,4 +47,9 @@ class VehicleModel extends Model
         // A vehicle model belongs to and only a brand
         return $this->belongsTo(Brand::class);
     }
+
+    public function cars(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Car::class);
+    }
 }
