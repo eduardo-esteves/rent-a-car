@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use Illuminate\Http\Request;
+use App\Repositories\CarRepository;
 
 class CarController extends Controller
 {
@@ -14,11 +15,26 @@ class CarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cars = $this->car->with('vehicleModel')->get();
+        $car_repository = new CarRepository($this->car);
 
-        return response()->json($cars);
+        $cars_attributes = $request->has('cars_attributes')
+            ? $request->input('cars_attributes') . ',vehicle_model_id'
+            : '*';
+
+        $vehicles_attributes = $request->has('vehicles_attributes')
+            ? 'vehicle_model:id,' . $request->input('vehicles_attributes')
+            : 'vehicleModel';
+
+        $car_repository->selectCarAttributesWithVehiclesModels([
+            'cars_attributes' => $cars_attributes,
+            'vehicles_models_attributes' => $vehicles_attributes
+        ]);
+
+        $result = $car_repository->getResult();
+
+        return response()->json($result);
     }
 
     /**
